@@ -2,30 +2,24 @@ const CommonController = require('./common')
 class UserController extends CommonController {
   async index() {
     const ctx = this.ctx
-    let { limit, offset, name, phone } = this.getPageQuery()
+    let { limit, offset, realname, phone } = this.getPageQuery()
     const { Op } = this.app.Sequelize
     const where = {
-      name: {
-        [Op.startsWith]: name || '',
-      },
-      phone: {
-        [Op.startsWith]: phone || '',
+      realname: {
+        [Op.startsWith]: realname || '',
       },
     }
     const query = {
       limit,
       offset,
       where: this.wrapplaceId(where),
-      order: [
-        ['createdAt', 'DESC'],
-        ['name', 'ASC'],
-      ],
     }
     ctx.body = await ctx.service.user.list(query)
   }
 
   async show() {
     const ctx = this.ctx
+    console.log(ctx.params.id, 222)
     ctx.body = await ctx.service.user.detail(ctx.params.id)
   }
 
