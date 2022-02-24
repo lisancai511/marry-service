@@ -39,13 +39,7 @@ module.exports = (app) => {
     },
     phone: {
       type: STRING(11),
-      allowNull: false,
       comment: '手机号码',
-      validate: {
-        notEmpty: {
-          msg: '手机号码不能为空',
-        },
-      },
     },
     sex: {
       type: STRING(1),

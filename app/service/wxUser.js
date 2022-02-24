@@ -121,15 +121,20 @@ class WxUserService extends CommenService {
   }
   async wxLogin(body) {
     const { ctx } = this
-    const {openId} = body
-    const wxUser = await ctx.model.WxUser.findOne({
-      where: {
+    const {phone = '', openId = ''} = body
+    const { Op } = app.Sequelize
+    const where = {
+      [Op.or]: {
+        phone,
         openId
       }
-    })
-    if (!wxUser) {
-      return this.error(null, '该用户尚未注册！')
     }
+    const [wxUser, created] = await ctx.model.WxUser.findOrCreate({
+      where,
+      defaults: body,
+      fields: ['openId', 'shareOpenId', 'name', 'useImage', 'phone', 'sex']
+    })
+    
     await ctx.cookies.set('uid', wxUser.id, {
       httpOnly: true,
       encrypt: true
@@ -137,19 +142,27 @@ class WxUserService extends CommenService {
     return this.success(wxUser, '登录成功！')
   }
   async register(body) {
-    const { ctx } = this
-    const { phone } = body
-    console.log(1)
+    const { ctx, app } = this
+    const { phone = '', openId = '' } = body
+    const { Op } = app.Sequelize
+    const where = {
+      [Op.or]: {
+        phone,
+        openId
+      }
+    }
     const [wxUser, created] = await ctx.model.WxUser.findOrCreate({
-      where: {
-        phone
-      },
+      where,
       defaults: body,
       fields: ['openId', 'shareOpenId', 'name', 'useImage', 'phone', 'sex']
     })
-    if (!created) {
-      return this.error(null, '该用户已存在！')
-    }
+    // if (!created) {
+    //   return this.error(null, '该用户已存在！')
+    // }
+    await ctx.cookies.set('uid', wxUser.id, {
+      httpOnly: true,
+      encrypt: true
+    })
     return this.success(wxUser, '恭喜你，注册成功！')
   }
   async takeCollect(userId) {

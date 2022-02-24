@@ -32,7 +32,7 @@ class AppBootHook {
     // console.log(typeof this.app.model.sync)
     
     if (process.env.NODE_ENV === 'development') {
-      // await this.app.model.sync({ force: false, alter: true })
+      await this.app.model.sync({ force: false, alter: true })
     }
   }
 }
