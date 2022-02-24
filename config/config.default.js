@@ -41,33 +41,32 @@ module.exports = (appInfo) => {
       text: ['text/xml', 'application/xml'],
     },
   }
-  // exports.sequelize = {
-  //   dialect: 'mysql',
-  //   host: '39.99.228.79',
-  //   username: 'root',
-  //   password: 'Wps097200.+',
-  //   port: 3508,
-  //   // database: 'errortest',
-  //   database: 'marry',
-  //   timezone: '+08:00',
-  //   define: {
-  //     underscored: true,
-  //     freezeTableName: true,
-  //   },
-  // }
   exports.sequelize = {
     dialect: 'mysql',
-    host: '10.213.134.254',
+    host: '39.99.228.79',
     username: 'root',
-    password: 'www.2020',
-    port: 3306,
+    password: 'Wps097200.+',
+    port: 3508,
     database: 'marry',
     timezone: '+08:00',
     define: {
       underscored: true,
-      freezeTableName: true
-    }
+      freezeTableName: true,
+    },
   }
+  // exports.sequelize = {
+  //   dialect: 'mysql',
+  //   host: '10.213.134.254',
+  //   username: 'root',
+  //   password: 'www.2020',
+  //   port: 3306,
+  //   database: 'marry',
+  //   timezone: '+08:00',
+  //   define: {
+  //     underscored: true,
+  //     freezeTableName: true
+  //   }
+  // }
   // exports.sequelize = {
   //   dialect: 'mysql',
   //   host: 'ddns.lsjddw.cn',

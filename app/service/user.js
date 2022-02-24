@@ -9,15 +9,14 @@ const axios = require('axios')
 class UserService extends CommenService {
   async list(query) {
     const { ctx } = this
-    const {limit,offset} = query
+    const { limit, offset } = query
     const { count, rows } = await ctx.model.User.findAndCountAll(query)
     const res = this.success(rows, '查询成功！')
     let hasMore = true
-    if(rows.length < limit) {
+    if (rows.length < limit) {
       hasMore = false
     } else {
-      let len = limit * offset
-      if (len >= count) {
+      if (offset + limit >= count) {
         hasMore = false
       }
     }
@@ -383,8 +382,8 @@ class UserService extends CommenService {
           let str = data.data.match(/value=.+"/g)
           item.wx_phone = str[0]
           await item.save()
-        } catch (error) {}
-      } catch (error) {}
+        } catch (error) { }
+      } catch (error) { }
     })
     return {
       code: 0,

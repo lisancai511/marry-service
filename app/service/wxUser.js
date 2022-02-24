@@ -121,7 +121,7 @@ class WxUserService extends CommenService {
   }
   async wxLogin(body) {
     const { ctx } = this
-    const {phone = '', openId = ''} = body
+    const { phone = '', openId = '' } = body
     const { Op } = app.Sequelize
     const where = {
       [Op.or]: {
@@ -134,7 +134,7 @@ class WxUserService extends CommenService {
       defaults: body,
       fields: ['openId', 'shareOpenId', 'name', 'useImage', 'phone', 'sex']
     })
-    
+
     await ctx.cookies.set('uid', wxUser.id, {
       httpOnly: true,
       encrypt: true
@@ -199,7 +199,7 @@ class WxUserService extends CommenService {
   }
   async getCollectionList(query) {
     const { ctx } = this
-    const {limit,offset} = query
+    const { limit, offset } = query
     const wxUserId = this.getWxUserId()
     const wxUser = await ctx.model.WxUser.findByPk(wxUserId)
     const rows = await wxUser.getUsers({
@@ -209,11 +209,10 @@ class WxUserService extends CommenService {
     const count = await wxUser.countUsers()
     // const { count, rows } = await ctx.model.User.findAndCountAll(query)
     let hasMore = true
-    if(rows.length < limit) {
+    if (rows.length < limit) {
       hasMore = false
     } else {
-      let len = limit * offset
-      if (len >= count) {
+      if (offset + limit >= count) {
         hasMore = false
       }
     }
@@ -224,7 +223,7 @@ class WxUserService extends CommenService {
       success: true,
     }
   }
-  
+
 }
 
 module.exports = WxUserService
