@@ -187,7 +187,14 @@ class WxUserService extends CommenService {
   async getCollectionList(query) {
     const { ctx } = this
     const {limit,offset} = query
-    const { count, rows } = await ctx.model.User.findAndCountAll(query)
+    const wxUserId = this.getWxUserId()
+    const wxUser = await ctx.model.WxUser.findByPk(wxUserId)
+    const rows = await wxUser.getUsers({
+      ...query,
+      joinTableAttributes: []
+    })
+    const count = await wxUser.countUsers()
+    // const { count, rows } = await ctx.model.User.findAndCountAll(query)
     let hasMore = true
     if(rows.length < limit) {
       hasMore = false
