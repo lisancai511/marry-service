@@ -155,12 +155,15 @@ class WxUserService extends CommenService {
   async takeCollect(userId) {
     const { ctx } = this
     const wxUserId = this.getWxUserId()
-    const [wxUser, created] = await ctx.model.UserWxUser.findOrCreate({
+    const [_, created] = await ctx.model.UserWxUser.findOrCreate({
       where: {
         userId,
         wxUserId
       },
-      defaults: body,
+      defaults: {
+        userId,
+        wxUserId
+      },
     })
     if (!created) {
       return this.error(null, '已收藏，不能重复收藏！')

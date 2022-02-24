@@ -17,7 +17,7 @@ class CommonService extends Service {
     return options
   }
   getWxUserId() {
-    return  ctx.cookies.get('uid', {
+    return  this.ctx.cookies.get('uid', {
       encrypt: true
     })
   }

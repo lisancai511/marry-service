@@ -46,7 +46,7 @@ class WxUserController extends CommonController {
   async batchCancelCollect() {
     const { ctx } = this
     const {userIds = []} = ctx.request.body
-    if (!userIds.length || wxUserId == undefined) {
+    if (!userIds.length) {
       ctx.body = this.error(null, "参数有误！")
       return
     }
