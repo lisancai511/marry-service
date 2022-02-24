@@ -1,16 +1,16 @@
-// This file is created by egg-ts-helper@1.30.2
+// This file is created by egg-ts-helper@1.25.6
 // Do not modify this file!!!!!!!!!
 
 import 'egg';
 import ExportCommon = require('../../../app/controller/common');
-import ExportUploadImg = require('../../../app/controller/uploadImg');
+import ExportUpload = require('../../../app/controller/upload');
 import ExportUser = require('../../../app/controller/user');
 import ExportWxUser = require('../../../app/controller/wxUser');
 
 declare module 'egg' {
   interface IController {
     common: ExportCommon;
-    uploadImg: ExportUploadImg;
+    upload: ExportUpload;
     user: ExportUser;
     wxUser: ExportWxUser;
   }

@@ -139,6 +139,56 @@ class WxUserService extends CommenService {
     }
     return this.success(wxUser, '恭喜你，注册成功！')
   }
+  async takeCollect(body) {
+    const { ctx } = this
+    const {userId, wxUserId} = body
+    const [wxUser, created] = await ctx.model.UserWxUser.findOrCreate({
+      where: {
+        userId,
+        wxUserId
+      },
+      defaults: body,
+    })
+    if (!created) {
+      return this.error(null, '已收藏，不能重复收藏！')
+    }
+    return this.success(null, '收藏成功！')
+  }
+  async cancelCollect(body) {
+    const { ctx } = this
+    const {userId, wxUserId} = body
+    const wxUser = await ctx.model.WxUser.findByPk(wxUserId)
+    await wxUser.removeUser(userId)
+    return this.success(null, '取消成功！')
+  }
+  async batchCancelCollect(body) {
+    const { ctx } = this
+    const {userIds, wxUserId} = body
+    const wxUser = await ctx.model.WxUser.findByPk(wxUserId)
+    await wxUser.removeUsers(userIds)
+    return this.success(null, '批量取消成功！')
+  }
+  async getCollectionList(query) {
+    const { ctx } = this
+    const {limit,offset} = query
+    const { count, rows } = await ctx.model.User.findAndCountAll(query)
+    let hasMore = true
+    if(rows.length < limit) {
+      hasMore = false
+    } else {
+      let len = limit * offset
+      if (len >= count) {
+        hasMore = false
+      }
+    }
+    const res = this.success(rows, '查询成功！')
+    return {
+      ...res,
+      hasMore,
+      success: true,
+    }
+  }
+  
 }
 
 module.exports = WxUserService

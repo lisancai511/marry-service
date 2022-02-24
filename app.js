@@ -30,72 +30,9 @@ class AppBootHook {
     // http / https server 已启动，开始接受外部请求
     // 此时可以从 app.server 拿到 server 的实例
     // console.log(typeof this.app.model.sync)
-    const authList = [
-      {
-        authName: '场地管理',
-        authCode: 'place',
-        authFlag: '-2'
-      },
-      {
-        authName: '人员管理',
-        authCode: 'user'
-      },
-      {
-        authName: '权限管理',
-        authCode: 'auth',
-        authFlag: '-2'
-      },
-      {
-        authName: '角色管理',
-        authCode: 'role'
-      }
-    ]
+    
     if (process.env.NODE_ENV === 'development') {
-      await this.app.model.sync({ force: false, alter: true })
-      const superMan1 = {
-        name: '韦鹏帅',
-        phone: '13271591339',
-        desc: '皇上'
-      }
-      const superMan2 = {
-        name: '李三才',
-        phone: '15395833823',
-        desc: '小李子'
-      }
-      await this.app.model.Admin.findOrCreate({
-        where: {
-          phone: superMan1.phone
-        },
-        defaults: superMan1
-      })
-      await this.app.model.Admin.findOrCreate({
-        where: {
-          phone: superMan2.phone
-        },
-        defaults: superMan2
-      })
-      await this.app.model.User.findOrCreate({
-        where: {
-          phone: superMan1.phone
-        },
-        defaults: superMan1
-      })
-      await this.app.model.User.findOrCreate({
-        where: {
-          phone: superMan2.phone
-        },
-        defaults: superMan2
-      })
-      for (let i = 0; i < authList.length; i++) {
-        const item = authList[i]
-        await this.app.model.Auth.findOrCreate({
-          where: item,
-          defaults: {
-            ...item,
-            desc: item.authName
-          }
-        })
-      }
+      // await this.app.model.sync({ force: false, alter: true })
     }
   }
 }

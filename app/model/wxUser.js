@@ -52,5 +52,12 @@ module.exports = (app) => {
       comment: '性别',
     }
   })
+
+  WxUser.associate = function () {
+    app.model.WxUser.belongsToMany(app.model.User, {
+      through: 'user_wxuser'
+    })
+  }
+
   return WxUser
 }

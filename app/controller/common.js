@@ -38,6 +38,23 @@ class CommonController extends Controller {
     }
     return options
   }
+  success(data, msg = null) {
+    return {
+      code: 0,
+      success: true,
+      data,
+      msg
+    }
+  }
+
+  error(data = null, msg) {
+    return {
+      code: 1,
+      success: false,
+      data,
+      msg
+    }
+  }
 }
 
 module.exports = CommonController

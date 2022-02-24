@@ -256,6 +256,10 @@ module.exports = (app) => {
       comment: '备注',
     },
   })
-
+  User.associate = function () {
+    app.model.User.belongsToMany(app.model.WxUser, {
+      through: 'user_wxuser'
+    })
+  }
   return User
 }

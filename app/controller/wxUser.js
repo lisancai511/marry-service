@@ -25,6 +25,44 @@ class WxUserController extends CommonController {
     const { ctx } = this
     ctx.body = await ctx.helper.getAccessToken()
   }
+  async takeCollect() {
+    const { ctx } = this
+    const {userId, wxUserId} = ctx.request.body
+    if (userId == undefined || wxUserId == undefined) {
+      ctx.body = this.error(null, "参数有误！")
+      return
+    }
+    ctx.body = await ctx.service.wxUser.takeCollect(ctx.request.body)
+  }
+  async cancelCollect() {
+    const { ctx } = this
+    const {userId, wxUserId} = ctx.request.body
+    if (userId == undefined || wxUserId == undefined) {
+      ctx.body = this.error(null, "参数有误！")
+      return
+    }
+    ctx.body = await ctx.service.wxUser.cancelCollect(ctx.request.body)
+  }
+  async batchCancelCollect() {
+    const { ctx } = this
+    const {userIds = [], wxUserId} = ctx.request.body
+    if (!userIds.length || wxUserId == undefined) {
+      ctx.body = this.error(null, "参数有误！")
+      return
+    }
+    ctx.body = await ctx.service.wxUser.batchCancelCollect(ctx.request.body)
+  }
+  async getCollectionList() {
+    const ctx = this.ctx
+    let { limit, offset } = this.getPageQuery()
+    const query = {
+      limit,
+      offset,
+    }
+    ctx.body = await ctx.service.wxUser.getCollectionList(query)
+  }
+  
+  
 }
 
 module.exports = WxUserController

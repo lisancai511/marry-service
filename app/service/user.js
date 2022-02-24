@@ -9,11 +9,22 @@ const axios = require('axios')
 class UserService extends CommenService {
   async list(query) {
     const { ctx } = this
+    const {limit,offset} = query
     const { count, rows } = await ctx.model.User.findAndCountAll(query)
     const res = this.success(rows, '查询成功！')
+    let hasMore = true
+    if(rows.length < limit) {
+      hasMore = false
+    } else {
+      let len = limit * offset
+      if (len >= count) {
+        hasMore = false
+      }
+    }
     return {
       ...res,
       total: count,
+      hasMore,
       success: true,
     }
   }
