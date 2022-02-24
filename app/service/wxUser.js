@@ -60,19 +60,16 @@ class WxUserService extends CommenService {
       }
     }
   }
-  async getUser(openId) {
+  async getCurrentUser(openId) {
     const { ctx } = this
-    const User = await ctx.model.WxUser.findOne({
+    const user = await ctx.model.WxUser.findOne({
       where: {
         openId,
       },
     })
-    if (User) {
-      const res = this.success(User, '查询成功')
-      return {
-        ...res,
-        success: true,
-      }
+    if (user) {
+      user.phone = ctx.helper.fluzzPhone(user.phone)
+      return this.success(user, '查询成功')
     }
     return this.error(null, '无当前数据，获取详情失败')
   }
@@ -121,6 +118,26 @@ class WxUserService extends CommenService {
         msg: '用户不存在',
       }
     }
+  }
+  async wxLogin(body) {
+    const { ctx } = this
+    await ctx.model.WxUser
+  }
+  async register(body) {
+    const { ctx } = this
+    const { phone } = body
+    console.log(1)
+    const [wxUser, created] = await ctx.model.WxUser.findOrCreate({
+      where: {
+        phone
+      },
+      defaults: body,
+      fields: ['openId', 'shareOpenId', 'name', 'useImage', 'phone', 'sex']
+    })
+    if (!created) {
+      return this.error(null, '该用户已存在！')
+    }
+    return this.success(wxUser, '恭喜你，注册成功！')
   }
 }
 

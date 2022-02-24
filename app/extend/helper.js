@@ -248,3 +248,29 @@ exports.getBaiduToken = async function getBaiduToken() {
 //   this.ctx.set('Content-Disposition', "attachment;filename*=UTF-8' '" + encodeURIComponent(name) + '.xlsx');
 //   this.ctx.body = await workbook.xlsx.writeBuffer();
 // }
+exports.fluzzPhone = function (phone) {
+  if (phone && phone.length === 11 && phone != undefined) {
+    return phone.replace(phone.substring(3, 7), '****')
+  }
+  return null
+}
+
+exports.getAccessToken = async function () {
+  const { ctx } = this
+  let url = 'https://api.weixin.qq.com/cgi-bin/token'
+  const params = {
+    grant_type: 'client_credential',
+    appid: 'wx79a0b1b3afa8d164',
+    secret: '75a645f2c2ae224c22e5b75a27ba4bee',
+  }
+  url += `?${qs.stringify(params)}`
+  const res = await ctx.curl(url, {
+    method: 'POST',
+    contentType: 'json',
+    dataType: 'json'
+  });
+  if (res && res.data) {
+    return res.data
+  }
+  return null
+}

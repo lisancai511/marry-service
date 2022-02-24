@@ -33,39 +33,24 @@ module.exports = (app) => {
       type: STRING(50),
       comment: '微信头像',
     },
+    nickName: {
+      type: STRING(6),
+      comment: '用户昵称',
+    },
     phone: {
       type: STRING(11),
-      allowNull: true,
+      allowNull: false,
       comment: '手机号码',
+      validate: {
+        notEmpty: {
+          msg: '手机号码不能为空',
+        },
+      },
     },
-    studentId: {
-      type: UUID,
-      comment: '学生在驾校的id',
-      allowNull: true,
-    },
-    vipOne: {
-      type: BOOLEAN,
-      comment: '科一是否是vip',
-      allowNull: false,
-      defaultValue: false,
-    },
-    vipOneCreate: {
-      type: DATE,
-      allowNull: true,
-      comment: '科目一开始时间',
-    },
-    vipFour: {
-      type: BOOLEAN,
-      comment: '科四是否是vip',
-      allowNull: false,
-      defaultValue: false,
-    },
-    vipFourCreate: {
-      type: DATE,
-      allowNull: true,
-      comment: '科目四开始时间',
-    },
+    sex: {
+      type: STRING(1),
+      comment: '性别',
+    }
   })
-
   return WxUser
 }

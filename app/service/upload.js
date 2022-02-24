@@ -2,9 +2,35 @@
 
 const CommenService = require('./common')
 const path = require('path')
-const fs = require('mz/fs')
+const mzfs = require('mz/fs')
+const fs = require('fs')
+const dayjs = require('dayjs')
 
-class UploadImgService extends CommenService {
+function getStat(path) {
+  return new Promise((resolve) => {
+    fs.stat(path, (err) => {
+      if (err) {
+        resolve(false)
+      } else {
+        resolve(true)
+      }
+    })
+  })
+}
+
+function mkDir(path) {
+  return new Promise(resolve => {
+    fs.mkdir(path, { recursive: true }, (err) => {
+      if (err) {
+        resolve(false)
+      } else {
+        resolve(true)
+      }
+    })
+  })
+}
+
+class UploadService extends CommenService {
   async list(query) {
     const { ctx } = this
     const { count, rows } = await ctx.model.Auth.findAndCountAll(query)
@@ -100,31 +126,38 @@ class UploadImgService extends CommenService {
     if (!files.length) {
       return this.error(null, '请选择上传的图片！')
     }
+    const con = dayjs().format('YYYY/MM')
+    let list = []
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       const name = file.filename
-      console.log('field: ' + file.fieldname)
-      console.log('filename: ' + file.filename)
-      console.log('encoding: ' + file.encoding)
-      console.log('mime: ' + file.mime)
-      console.log('tmp filepath: ' + file.filepath)
-      let result
       try {
         const id = ctx.helper.generateId()
+        const ext = name.substring(name.lastIndexOf("."))
         const baseUrl = 'public'
-        const fileName = `${id}_${name}`
-        const url = path.resolve(baseUrl, fileName)
+        const fileName = `${id}${ext}`
+        const dir = path.resolve(baseUrl, con)
+        const url = path.resolve(dir, fileName)
+        const isok = await getStat(dir)
+        if (!isok) {
+          await mkDir(dir)
+        }
+        const readStream = fs.createReadStream(file.filepath)
+        const writeStream = fs.createWriteStream(url)
+        readStream.pipe(writeStream)
+        list.push(path.join(baseUrl, con, fileName))
         console.log(url)
         //  存储图片
+      } catch (e) {
+        return this.error(null, '上传失败！')
       } finally {
         // 需要删除临时文件
-        await fs.unlink(file.filepath)
+        await mzfs.unlink(file.filepath)
       }
-      console.log(result)
     }
 
-    return this.success(list, null)
+    return this.success(list, '上传成功！')
   }
 }
 
-module.exports = UploadImgService
+module.exports = UploadService

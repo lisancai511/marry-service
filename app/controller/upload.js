@@ -1,5 +1,5 @@
 const CommonController = require('./common')
-class UploadImgController extends CommonController {
+class uploadController extends CommonController {
   async index() {
     const ctx = this.ctx
     let { limit, offset, authName } = this.getPageQuery()
@@ -18,39 +18,38 @@ class UploadImgController extends CommonController {
         ['authName', 'ASC'],
       ],
     }
-    ctx.body = await ctx.service.uploadImg.list(query)
+    ctx.body = await ctx.service.upload.list(query)
   }
 
   async show() {
     const ctx = this.ctx
-    ctx.body = await ctx.service.uploadImg.detail(ctx.params.id)
+    ctx.body = await ctx.service.upload.detail(ctx.params.id)
   }
 
   async create() {
     const ctx = this.ctx
     let { body } = ctx.request
-    ctx.body = await ctx.service.uploadImg.create(body)
+    ctx.body = await ctx.service.upload.create(body)
   }
 
   async update() {
     const ctx = this.ctx
     let { body } = ctx.request
-    ctx.body = await ctx.service.uploadImg.update(ctx.params.id, body)
+    ctx.body = await ctx.service.upload.update(ctx.params.id, body)
   }
 
   async destroy() {
     const ctx = this.ctx
-    ctx.body = await ctx.service.uploadImg.destroy(ctx.params.id)
+    ctx.body = await ctx.service.upload.destroy(ctx.params.id)
   }
   async getAllAuth() {
     const ctx = this.ctx
-    ctx.body = await ctx.service.uploadImg.getAllAuth()
+    ctx.body = await ctx.service.upload.getAllAuth()
   }
-  async uploadFile111() {
-    console.log('in')
+  async uploadFile() {
     const ctx = this.ctx
     const files = ctx.request.files
-    ctx.body = await ctx.service.uploadImg.uploadFile(files)
+    ctx.body = await ctx.service.upload.uploadFile(files)
   }
 
   async getUserInfo() {
@@ -74,4 +73,4 @@ class UploadImgController extends CommonController {
   }
 }
 
-module.exports = UploadImgController
+module.exports = uploadController
