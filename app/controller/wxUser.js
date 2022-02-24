@@ -28,29 +28,29 @@ class WxUserController extends CommonController {
   async takeCollect() {
     const { ctx } = this
     const {userId, wxUserId} = ctx.request.body
-    if (userId == undefined || wxUserId == undefined) {
+    if (userId == undefined) {
       ctx.body = this.error(null, "参数有误！")
       return
     }
-    ctx.body = await ctx.service.wxUser.takeCollect(ctx.request.body)
+    ctx.body = await ctx.service.wxUser.takeCollect(userId)
   }
   async cancelCollect() {
     const { ctx } = this
-    const {userId, wxUserId} = ctx.request.body
-    if (userId == undefined || wxUserId == undefined) {
+    const {userId} = ctx.request.body
+    if (userId == undefined) {
       ctx.body = this.error(null, "参数有误！")
       return
     }
-    ctx.body = await ctx.service.wxUser.cancelCollect(ctx.request.body)
+    ctx.body = await ctx.service.wxUser.cancelCollect(userId)
   }
   async batchCancelCollect() {
     const { ctx } = this
-    const {userIds = [], wxUserId} = ctx.request.body
+    const {userIds = []} = ctx.request.body
     if (!userIds.length || wxUserId == undefined) {
       ctx.body = this.error(null, "参数有误！")
       return
     }
-    ctx.body = await ctx.service.wxUser.batchCancelCollect(ctx.request.body)
+    ctx.body = await ctx.service.wxUser.batchCancelCollect(userIds)
   }
   async getCollectionList() {
     const ctx = this.ctx

@@ -16,7 +16,11 @@ class CommonService extends Service {
     }
     return options
   }
-
+  getWxUserId() {
+    return  ctx.cookies.get('uid', {
+      encrypt: true
+    })
+  }
   createToken(userId) {
     const expiresIn = 60 * 60
     const app = this.app

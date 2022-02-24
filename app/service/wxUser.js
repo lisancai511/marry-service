@@ -121,7 +121,20 @@ class WxUserService extends CommenService {
   }
   async wxLogin(body) {
     const { ctx } = this
-    await ctx.model.WxUser
+    const {openId} = body
+    const wxUser = await ctx.model.WxUser.findOne({
+      where: {
+        openId
+      }
+    })
+    if (!wxUser) {
+      return this.error(null, '该用户尚未注册！')
+    }
+    await ctx.cookies.set('uid', wxUser.id, {
+      httpOnly: true,
+      encrypt: true
+    })
+    return this.success(wxUser, '登录成功！')
   }
   async register(body) {
     const { ctx } = this
@@ -139,9 +152,9 @@ class WxUserService extends CommenService {
     }
     return this.success(wxUser, '恭喜你，注册成功！')
   }
-  async takeCollect(body) {
+  async takeCollect(userId) {
     const { ctx } = this
-    const {userId, wxUserId} = body
+    const wxUserId = this.getWxUserId()
     const [wxUser, created] = await ctx.model.UserWxUser.findOrCreate({
       where: {
         userId,
@@ -154,16 +167,16 @@ class WxUserService extends CommenService {
     }
     return this.success(null, '收藏成功！')
   }
-  async cancelCollect(body) {
+  async cancelCollect(userId) {
     const { ctx } = this
-    const {userId, wxUserId} = body
+    const wxUserId = this.getWxUserId()
     const wxUser = await ctx.model.WxUser.findByPk(wxUserId)
     await wxUser.removeUser(userId)
     return this.success(null, '取消成功！')
   }
-  async batchCancelCollect(body) {
+  async batchCancelCollect(userIds) {
     const { ctx } = this
-    const {userIds, wxUserId} = body
+    const wxUserId = this.getWxUserId()
     const wxUser = await ctx.model.WxUser.findByPk(wxUserId)
     await wxUser.removeUsers(userIds)
     return this.success(null, '批量取消成功！')
