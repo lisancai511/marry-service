@@ -120,7 +120,7 @@ class WxUserService extends CommenService {
     }
   }
   async wxLogin(body) {
-    const { ctx } = this
+    const { ctx, app } = this
     const { phone = '', openId = '' } = body
     const { Op } = app.Sequelize
     const where = {
